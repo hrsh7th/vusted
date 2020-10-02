@@ -28,6 +28,7 @@ end
 
 local main = function()
   local version = arg[1] or ""
+  local dry_run = arg[2] == "dry-run"
   local major, minor, patch = version:match("(%d+)%.(%d+)%.(%d+)")
   if major == nil or minor == nil or patch == nil then
     error("invalid version: " .. version)
@@ -37,6 +38,9 @@ local main = function()
   os.execute("cat " .. rockspec_file)
 
   os.execute("luarocks make " .. rockspec_file)
+  if dry_run then
+    return
+  end
 
   local api_key = os.getenv("LUAROCKS_API_KEY")
   if api_key == nil or api_key == "" then
