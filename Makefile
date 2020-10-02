@@ -8,11 +8,14 @@ test:
 	${VUSTED}
 .PHONY: test
 
+
 TARGET_VERSION := x.x.x
+LUA_EXE := lua
 
 try:
-	lua release.lua ${TARGET_VERSION} dry-run
+	${LUA_EXE} release.lua ${TARGET_VERSION} dry-run
+.PHONY: try
 
 release:
-	LUAROCKS_API_KEY=${LUAROCKS_API_KEY} lua release.lua ${TARGET_VERSION}
+	LUAROCKS_API_KEY=${LUAROCKS_API_KEY} ${LUA_EXE} release.lua ${TARGET_VERSION}
 .PHONY: release

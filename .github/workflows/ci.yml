@@ -12,7 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: notomo/action-setup-nvim-lua@v1
-      - run: make try TARGET_VERSION=0.0.0
+        id: setup
+
+      - run: make try TARGET_VERSION=0.0.0 LUA_EXE=${{ steps.setup.outputs.luajit }}
 
       - uses: rhysd/action-setup-vim@v1
         id: vim
