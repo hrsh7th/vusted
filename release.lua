@@ -56,7 +56,9 @@ local main = function()
     error("`LUAROCKS_API_KEY` is not found")
   end
 
-  local upload = ("luarocks upload %s --temp-key=%s"):format(rockspec_file, api_key)
+  local lua_path = os.getenv("LUA_PATH")
+  local lua_cpath = os.getenv("LUA_CPATH")
+  local upload = ("LUA_PATH=%s LUA_CPATH=%s luarocks upload %s --temp-key=%s"):format(lua_path, lua_cpath, rockspec_file, api_key)
   execute(upload)
 end
 

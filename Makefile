@@ -13,9 +13,15 @@ TARGET_VERSION := x.x.x
 LUA_EXE := lua
 
 try:
-	${LUA_EXE} release.lua ${TARGET_VERSION} dry-run
+	$(MAKE) _release DRY_RUN=dry-run
 .PHONY: try
 
 release:
-	LUAROCKS_API_KEY=${LUAROCKS_API_KEY} ${LUA_EXE} release.lua ${TARGET_VERSION}
+	luarocks install lua-cjson
+	LUAROCKS_API_KEY=${LUAROCKS_API_KEY} $(MAKE) _release
 .PHONY: release
+
+_release:
+	luarocks install penlight
+	${LUA_EXE} release.lua ${TARGET_VERSION} ${DRY_RUN}
+.PHONY: _release

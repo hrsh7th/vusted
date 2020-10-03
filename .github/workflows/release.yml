@@ -16,8 +16,6 @@ jobs:
       - run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\/v/}
         id: var
 
-      # - run: luarocks install dkjson
-      - run: luarocks install penlight
       - run: make release TARGET_VERSION=${{ steps.var.outputs.version }} LUA_EXE=${{ steps.setup.outputs.luajit }}
         env:
           LUAROCKS_API_KEY: ${{ secrets.LUAROCKS_API_KEY }}
