@@ -8,20 +8,21 @@ test:
 	${VUSTED}
 .PHONY: test
 
-
 TARGET_VERSION := x.x.x
-LUA_EXE := lua
+TARGET_FILE := rockspec/vusted-${TARGET_VERSION}-1.rockspec
 
 try:
-	$(MAKE) _release DRY_RUN=dry-run
+	$(MAKE) new_rockspec
 .PHONY: try
 
 release:
-	luarocks install lua-cjson
-	LUAROCKS_API_KEY=${LUAROCKS_API_KEY} $(MAKE) _release
+	$(MAKE) new_rockspec
+	luarocks install dkjson
+	luarocks upload ${TARGET_FILE} --temp-key=${LUAROCKS_API_KEY}
 .PHONY: release
 
-_release:
-	luarocks install penlight
-	${LUA_EXE} release.lua ${TARGET_VERSION} ${DRY_RUN}
+new_rockspec:
+	luarocks new_version rockspec/vusted-x.x.x-1.rockspec --dir rockspec --tag=v${TARGET_VERSION}
+	cat ${TARGET_FILE}
+	luarocks make ${TARGET_FILE}
 .PHONY: _release
