@@ -26,6 +26,15 @@ local create_new_rockspec = function(version)
   return file_name
 end
 
+local execute = function(cmd)
+  local pl = require("pl.compat")
+  local ok, code = pl.execute(cmd)
+  if not ok then
+    local msg = ("cmd execute error: cmd=`%s`, code=%s"):format(cmd, code)
+    error(msg)
+  end
+end
+
 local main = function()
   local version = arg[1] or ""
   local dry_run = arg[2] == "dry-run"
@@ -35,9 +44,9 @@ local main = function()
   end
 
   local rockspec_file = create_new_rockspec(version)
-  os.execute("cat " .. rockspec_file)
+  execute("cat " .. rockspec_file)
 
-  os.execute("luarocks make " .. rockspec_file)
+  execute("luarocks make " .. rockspec_file)
   if dry_run then
     return
   end
@@ -47,8 +56,8 @@ local main = function()
     error("`LUAROCKS_API_KEY` is not found")
   end
 
-  local upload = ("luarocks upload %s --api-key=%s"):format(rockspec_file, api_key)
-  os.execute(upload)
+  local upload = ("luarocks upload %s --temp-key=%s"):format(rockspec_file, api_key)
+  execute(upload)
 end
 
 main()
